@@ -9,8 +9,8 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
 RUN apt-get update && apt-get install -y python3-pip
 # install the dependencies and packages in the requirements file
-#RUN pip install -r requirements.txt
-RUN python -m pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
+#RUN python3 -m pip3 install -r requirements.txt
 # copy every content from the local file to the image
 EXPOSE 5000
 #EXPOSE 80
