@@ -18,5 +18,5 @@ EXPOSE 5000
 
 # configure the container to run in an executed manner
 ENTRYPOINT [ "python3" ]
-
-CMD ["app.py" , "--bind", "0.0.0.0:5000"]
+CMD ["app.py"]
+#CMD ["app.py" , "--bind", "0.0.0.0:5000"]
