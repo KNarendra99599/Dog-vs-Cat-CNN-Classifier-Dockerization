@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageclassifier-deployment
+  labels:
+    app: imageclassifier
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: imageclassifier
+  template:
+    metadata:
+      labels:
+        app: imageclassifier
+    spec:
+      containers:
+      - name:  imagecalssifier
+        image: kasaragadda99599/imagecalssifier:24
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: imageclassifier
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+  name: imageclassifier-deployment
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: imageclassifier
+  type: LoadBalancer
+status:
+  loadBalancer: {}
