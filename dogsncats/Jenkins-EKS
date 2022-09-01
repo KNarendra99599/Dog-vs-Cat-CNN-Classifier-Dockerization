@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    stages {
+
+        stage('Clone Repo') {
+          steps {
+            sh 'sudo chmod 666 /var/run/docker.sock'  
+            sh 'rm -rf rm -rf Dog-vs-Cat-CNN-Classifier-Dockerization_output' 
+            sh 'git clone https://github.com/KNarendra99599/Dog-vs-Cat-CNN-Classifier-Dockerization_output.git' 
+            }
+        }
+       
+        stage('Build Docker Image') {
+          steps {
+            sh 'cd /var/lib/jenkins/workspace/project1/Dog-vs-Cat-CNN-Classifier-Dockerization_output'
+            sh 'sudo cp -r /var/lib/jenkins/workspace/project1/Dog-vs-Cat-CNN-Classifier-Dockerization_output/dogsncats/* /var/lib/jenkins/workspace/project1'
+            sh 'sudo docker build -t kasaragadda99599/imagecalssifier:${BUILD_NUMBER} .'
+            }
+        }
+		
+		stage('Push Image to Docker Hub') {
+          steps {
+withCredentials([string(credentialsId: 'DOCKERHUBPASSWORD', variable: 'DOCKERHUBPASSWORD')]) {
+		  sh    'sudo docker login -u kasaragadda99599 -p ${DOCKERHUBPASSWORD}'  
+		}	  
+			sh    'sudo docker push kasaragadda99599/imagecalssifier:${BUILD_NUMBER}'
+            }
+        }
+		
+		
+		stage('Deploy To Kubernetes Cluster') {
+          steps {
+			withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'EKS', namespace: '', serverUrl: '') {
+			sh    'sudo kubectl apply -f imageclassifier.yaml'
+			}		  
+            }
+        }	
+		
+	}
+
+	
+}
