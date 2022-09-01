@@ -20,7 +20,7 @@ pipeline {
 		
 		stage('Push Image to Docker Hub') {
           steps {
-withCredentials([string(credentialsId: 'DOCKERHUBPASSWORD', variable: 'DOCKERHUBPASSWORD')]) {
+		  withCredentials([string(credentialsId: 'DOCKERHUBPASSWORD', variable: 'DOCKERHUBPASSWORD')]) {
 		  sh    'sudo docker login -u kasaragadda99599 -p ${DOCKERHUBPASSWORD}'  
 		}	  
 			sh    'sudo docker push kasaragadda99599/imagecalssifier:${BUILD_NUMBER}'
